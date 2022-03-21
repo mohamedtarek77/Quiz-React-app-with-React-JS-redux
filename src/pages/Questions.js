@@ -126,7 +126,6 @@ import { useNavigate } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import { handleScoreChange } from "../redux/actions";
 import ErrorMessage from "../comp/ErrorMessage";
-// import '../index.css'
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * Math.floor(max));
@@ -158,7 +157,7 @@ const Questions = () => {
   const [Select, setSelect] = useState();
   const [error, seterror] = useState(false);
 
-  console.log(Select);
+  // console.log(Select);
 
   useEffect(() => {
     if (response?.results.length) {
@@ -171,7 +170,7 @@ const Questions = () => {
       );
 
       setoptions(answers);
-      console.log(answers);
+      // console.log(answers);
     }
   }, [response, questionIndex]);
   // console.log(response);
@@ -212,11 +211,13 @@ const Questions = () => {
     if (Select) {
       setquestionIndex(questionIndex + 1);
       setSelect();
-    } else if (questionIndex + 1 > response.results.length) {
-      Navigate("/score");
-    } else {
+    } else seterror("Please select an option first");
+  };
+
+  const showyourAnswer = () => {
+    if (!Select) {
       seterror("Please select an option first");
-    }
+    } else Navigate("/score");
   };
 
   return (
@@ -248,13 +249,23 @@ const Questions = () => {
       <Box className="score" mt={5}>
         Score:{score}/ {response.results.length}
       </Box>
-       <div className="blow-btns">
-       <Button  variant="contained" onClick={quitQuiz}> Quit </Button>
-      <Button  variant="contained" onClick={NextQuestion}>
-      Next Question
-      </Button>
-       </div>
-     
+      <div className="blow-btns">
+        <Button variant="contained" onClick={quitQuiz}>
+          {" "}
+          Quit{" "}
+        </Button>
+
+        {(questionIndex + 1 < response.results.length  ) ? (
+          <Button variant="contained" onClick={NextQuestion}>
+            Next Question
+          </Button>
+        ) :  <Button variant="contained" onClick={showyourAnswer}>
+            {" "}
+            show your score{" "}
+          </Button>}
+
+        
+      </div>
     </Box>
   );
 };
